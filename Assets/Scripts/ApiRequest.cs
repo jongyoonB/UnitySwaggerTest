@@ -11,10 +11,10 @@ public class User
     public string password;
 }
 
-public class RestClient : MonoBehaviour {
+public class ApiRequest {
 
     public User[] userInstance;
-    public string json;
+    private string json;
     // Use this for initialization
     void Start () {
         User userToJson = new User();
@@ -23,28 +23,39 @@ public class RestClient : MonoBehaviour {
         userToJson.password = "pwdpwd";
 
         json = JsonUtility.ToJson(userToJson);
-        Debug.Log(json);
+        //Debug.Log(json);
 	}
 
-    // Update is called once per frame
-    void Update () {
-        if (Input.GetKeyUp("q"))
-        {
-            Debug.Log ("PUT /user");
-            StartCoroutine(Put("http://localhost:3000/api/user", json));
+    public string SendRequest(MonoBehaviour mono, string method, string url)
+    {
+        string response;
+        Debug.Log(method);
+        Debug.Log(url);
+        switch(method){
+            case "GET":
+                {
+                    Debug.Log("!!");
+                    Debug.Log(mono.StartCoroutine(Get(url,userInstance)));
+                    break;
+                }
+            case "POST":
+                {
+                    mono.StartCoroutine(Post(url, json));
+                    break;
+                }
+            case "PUT":
+                {
+                    mono.StartCoroutine(Put(url, json));
+
+                    break;
+                }
+            case "DELETE":
+                {
+                    //StartCoroutine(Delete(url, json));
+                    break;
+                }
         }
-
-		if (Input.GetKeyUp("w"))
-		{
-			Debug.Log("POST /user");
-			StartCoroutine(Post("http://localhost:3000/api/user", json));
-		}
-
-		if (Input.GetKeyUp("e"))
-		{
-			Debug.Log("GET /user/{username}");
-            Debug.Log(StartCoroutine(Get("http://localhost:3000/api/monsters", userInstance)));
-		}
+        return "";
     }
 
     public IEnumerator Get<T> (string url, T[] array) {
@@ -65,7 +76,7 @@ public class RestClient : MonoBehaviour {
                 Debug.Log(request.downloadHandler.text);
                 Debug.Log ("--------------------------------");
                 array = JsonHelper.getJsonArray<T>(request.downloadHandler.text);
-                yield return array;
+                yield return request.downloadHandler.text.ToString();
             } else {
                 Debug.Log ("failed");
             }
