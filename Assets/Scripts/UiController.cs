@@ -20,35 +20,21 @@ public class UiController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        string response = "";
         UrlField.GetComponent<InputField>().text = "http://localhost:3000/api/";
-
         SendButton.onClick.AddListener(delegate
         {
-            ConsoleText.text = ApiRequest.SendRequest(this, MethodDropdown.options[MethodDropdown.value].text, UrlField.GetComponent<InputField>().text);
-            Debug.Log(ApiRequest.SendRequest(this, MethodDropdown.options[MethodDropdown.value].text, UrlField.GetComponent<InputField>().text));
+            StartCoroutine(ApiRequest.RequestApi(MethodDropdown.options[MethodDropdown.value].text, UrlField.GetComponent<InputField>().text, (res) =>
+                {
+                    response = res;
+                    Debug.Log(response);
+                    ConsoleText.text = response;
+                })
+            );
+            
         });
-
-        MethodDropdown.onValueChanged.AddListener(delegate
-        {
-            MethodValueChange(MethodDropdown);
-        });
-
-         HostDropdown.onValueChanged.AddListener(delegate
-         {
-             HostValueChange(HostDropdown);
-         });
     }
 	
-	// Update is called once per frame
-	void Update () {
-
-    }
-
-    void MethodValueChange(Dropdown method)
-    {
-        Debug.Log(method.options[method.value].text);
-    }
-
     void HostValueChange(Dropdown host)
     {
         Debug.Log(host.options[host.value].text);
