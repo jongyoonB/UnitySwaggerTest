@@ -1,7 +1,4 @@
-﻿using System;
-using UnityEngine;
-using System.Collections;
-using System.Text.RegularExpressions;
+﻿using UnityEngine;
 
 public static class JsonHelper
 {
@@ -17,11 +14,12 @@ public static class JsonHelper
 	//	public T[] user;
 	//}
 
-	public static T[] getJsonArray<T>(string json)
+	public static T[] jsonToInstance<T>(string json)
 	{
 		string newJson = "{ \"array\": " + json + "}";
-		Wrapper<T> wrapper = UnityEngine.JsonUtility.FromJson<Wrapper<T>>(newJson);
-		return wrapper.array;
+        Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(newJson);
+       
+        return wrapper.array;
 	}
 
 	//Usage:
@@ -30,6 +28,7 @@ public static class JsonHelper
 	{
 		Wrapper<T> wrapper = new Wrapper<T>();
 		wrapper.array = array;
+
 		return JsonUtility.ToJson(wrapper);
 	}
 

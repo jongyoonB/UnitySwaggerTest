@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class UiController : MonoBehaviour {
@@ -17,22 +15,28 @@ public class UiController : MonoBehaviour {
 
     public ApiRequest ApiRequest = new ApiRequest();
 
-
     // Use this for initialization
     void Start () {
         string response = "";
+        
         UrlField.GetComponent<InputField>().text = "http://localhost:3000/api/";
         SendButton.onClick.AddListener(delegate
-        {
+        {          
             StartCoroutine(ApiRequest.RequestApi(MethodDropdown.options[MethodDropdown.value].text, UrlField.GetComponent<InputField>().text, (res) =>
                 {
                     response = res;
                     Debug.Log(response);
+
                     ConsoleText.text = response;
+                    
                 })
             );
             
         });
+        HostDropdown.onValueChanged.AddListener(delegate {
+            HostValueChange(HostDropdown);
+        });
+
     }
 	
     void HostValueChange(Dropdown host)
